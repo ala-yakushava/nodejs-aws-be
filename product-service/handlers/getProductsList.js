@@ -1,21 +1,23 @@
-import productList from '../product-list.json';
+import { getProducts } from './getProducts';
 
-export const getProductsList = (event, context, cb) => {
-  const p = new Promise((resolve) => {
-    resolve('success');
-  });
-  const response = {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    },
-    body: JSON.stringify(
-      productList,
-      null,
-      2
-    ),
-  };
-  p.then(() => cb(null, response)).catch((e) => cb(e));
+export const getProductsList = async (_event, _context, cb) => {
+  try {
+    const result = await getProducts();
+    const response = {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      },
+      body: JSON.stringify(
+        result,
+        null,
+        2
+      ),
+    };
+    return cb(null, response);
+  } catch (err) {
+    return cb(err);
+  }
 };
